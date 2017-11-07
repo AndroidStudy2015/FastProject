@@ -1,0 +1,46 @@
+<resources>
+
+
+    <style name="BottomEnterBottomExit" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/bottom_exit</item>
+    </style>
+
+    <style name="LeftEnterLeftExit" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/left_enter</item>
+        <item name="android:windowExitAnimation">@anim/left_exit</item>
+    </style>
+
+    <style name="RightEnterRightExit" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/right_enter</item>
+        <item name="android:windowExitAnimation">@anim/right_exit</item>
+    </style>
+
+    <style name="TopEnterTopExit" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/top_enter</item>
+        <item name="android:windowExitAnimation">@anim/top_exit</item>
+    </style>
+
+    <style name="BottomEnterTopExit" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/top_exit</item>
+    </style>
+
+    <style name="TopEnterBotttomExit" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/top_enter</item>
+        <item name="android:windowExitAnimation">@anim/bottom_exit</item>
+    </style>
+
+    <style name="LeftEnterRightExit" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/left_enter</item>
+        <item name="android:windowExitAnimation">@anim/right_exit</item>
+    </style>
+
+    <style name="RightEnterLeftExit" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/right_enter</item>
+        <item name="android:windowExitAnimation">@anim/left_exit</item>
+    </style>
+    
+    
+
+</resources>
