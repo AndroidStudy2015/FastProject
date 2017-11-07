@@ -20,8 +20,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -33,7 +31,9 @@ import com.fast.core.fast_core.ui.picture.select_one_pic.adapter.PicturePickerAd
 import com.fast.core.fast_core.ui.picture.select_one_pic.adapter.PopupWindowSelectDirAdapter;
 import com.fast.core.fast_core.ui.picture.select_one_pic.bean.FolderBean;
 import com.fast.core.fast_core.ui.picture.select_one_pic.utils.ComparatorUtils;
-import com.fast.core.fast_core.ui.picture.select_one_pic.utils.CunZhi;
+import com.fast.core.fast_core.ui.picture.select_one_pic.utils.ImageUtils;
+import com.fast.core.fast_core.utils.log.FastLogger;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,7 +47,6 @@ import java.util.List;
  */
 
 public class PicturePickerActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final int RESULT_CODE_SELECTED_PATH_LIST = 10;
     private RecyclerView mPicPickerRecyclerView;
 
     private ProgressDialog mProgressDialog;
@@ -79,10 +78,6 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
      * 存放所有图片path的集合
      */
     List<String> allImgPathList = new ArrayList<>();
-    /**
-     * 存放所有临时选中的图片的集合
-     */
-    public static List<String> mTempSelectPathList = new ArrayList<>();
 
     private TextView mTvSelectDir;
     private ImageView mSjxIcon;
@@ -100,10 +95,6 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     private final int INIT_POP_VIEW = 0x004;
 
     private ImageView mIvBack;
-    private Button mBtFinish;
-    private TextView mTvYuLan;
-    private static final int OPEN_YU_LAN_ACTIVITY = 0x005;
-    private static final int OPEN_YU_LAN_ALL_ACTIVITY = 0x006;
 
 
     private Handler mHandler = new Handler() {
@@ -163,8 +154,6 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     }
 
     private void setClickListener() {
-        mBtFinish.setOnClickListener(this);
-        mTvYuLan.setOnClickListener(this);
         mRlSelectDir.setOnClickListener(this);
         mIvBack.setOnClickListener(this);
 
@@ -173,11 +162,9 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
 
 
     private void initView() {
-        mBtFinish = (Button) findViewById(R.id.bt_finish);
 
         mRlBottom = (RelativeLayout) findViewById(R.id.rl_bottom);
         mTvSelectDir = (TextView) findViewById(R.id.tv_select_dir);
-        mTvYuLan = (TextView) findViewById(R.id.tv_yu_lan);
 
         mRlSelectDir = (RelativeLayout) findViewById(R.id.rl_select_dir);
         mSjxIcon = (ImageView) findViewById(R.id.sjx);
@@ -211,7 +198,6 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         mPicPickerRecyclerView.setAdapter(mPicturePickerAdapter);//为了避免弄no adpater，这里先设置一个空数据的adapter
         GridLayoutManager gridLayoutManager = new GridLayoutManager(PicturePickerActivity.this, 3);
         mPicPickerRecyclerView.setLayoutManager(gridLayoutManager);
-//        final Intent yuLanALLIntent = new Intent(this, YuLanAllActivity.class);
 
         mPicturePickerAdapter.setOnPicturePickerItemClickLisnter(new PicturePickerAdapter.OnPicturePickerItemClickLisnter() {
 
@@ -219,11 +205,21 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
             // TODO: 2017/8/28  
             @Override
             public void onImageClick(ImageView picPickerImagerView, int position) {
+                //              根据Uri.fromFile(file)方法即可将path转为uri
+                Uri sourceUri = Uri.fromFile(new File(mImgs.get(position)));
+//               创建裁剪照片之后保存的路径，也是先用path--->file--->Uri
+                String saveDir = Environment.getExternalStorageDirectory()
+                        + "/crop";
+                File dir = new File(saveDir);
+                if (!dir.exists()) {
+                    dir.mkdir();
+                }
+                Uri destinationUri = Uri.fromFile(new File(saveDir, "crop.jpg"));
+                UCrop.of(sourceUri, destinationUri)
+//                        .withAspectRatio(16, 9)
+                        .withMaxResultSize(900, 900)
+                        .start(PicturePickerActivity.this);
 
-//                yuLanALLIntent.putStringArrayListExtra("mImgs", (ArrayList<String>) mImgs);
-//                yuLanALLIntent.putExtra("position", position);
-//                yuLanALLIntent.putStringArrayListExtra("yuLanList", (ArrayList<String>) mTempSelectPathList);
-//                startActivityForResult(yuLanALLIntent, OPEN_YU_LAN_ALL_ACTIVITY);
             }
 
 
@@ -232,24 +228,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
 
     }
 
-//    private void updateBtFinishAndYuLanText() {
-//        if (mTempSelectPathList.size() != 0) {
-//            mTvYuLan.setEnabled(true);
-//            mTvYuLan.setTextColor(getResources().getColor(R.color.enable_text_color));
-//            mTvYuLan.setText("预览(" + mTempSelectPathList.size() + ")");
-//
-//            mBtFinish.setEnabled(true);
-//            mBtFinish.setText("完成(" + (mTempSelectPathList.size()) + "/" + CunZhi.mMaxSelectCount + ")");
-//        } else {
-//            mTvYuLan.setEnabled(false);
-//            mTvYuLan.setTextColor(getResources().getColor(R.color.unenable_text_color));
-//            mTvYuLan.setText("预览");
-//
-//            mBtFinish.setEnabled(false);
-//            mBtFinish.setText("完  成");
-//
-//        }
-//    }
+
 
 
     /**
@@ -438,18 +417,17 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            final Uri resultUri = UCrop.getOutput(data);
+            String realFilePath = ImageUtils.getRealFilePath(PicturePickerActivity.this, resultUri);
+            data.putExtra("c",realFilePath);
+            setResult(111,data);
+            finish();
+            FastLogger.e("ccc",resultUri+"");
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            final Throwable cropError = UCrop.getError(data);
+        }
 
-//
-//        if (resultCode == YuLanActivity.RESULT_CODE_SELECTED_PATH_LIST_YU_LAN) {
-//            mTempSelectPathList.clear();
-//
-//            ArrayList<String> mTempYuLanLists = data.getStringArrayListExtra("mSencondShaiXuanYuLanLists");
-//            mTempSelectPathList.addAll(mTempYuLanLists);
-//            // TODO: 2017/8/28
-//            updateBtFinishAndYuLanText();
-//
-//            mPicturePickerAdapter.notifyDataSetChanged();
-//        }
 
 
     }

@@ -10,7 +10,18 @@
         android:supportsRtl="true"
         >
         <activity android:name="com.fast.core.fast_core.ui.scan.SimpleScannerBarActivity"/>
-        <activity android:name="com.fast.core.fast_core.ui.picture.select_one_pic.activity.PicturePickerActivity"/>
+
+        <activity
+            android:name="com.fast.core.fast_core.ui.picture.select_one_pic.activity.PicturePickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
+
+
+
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

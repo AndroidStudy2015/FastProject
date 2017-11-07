@@ -10,12 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.fast.core.fast_core.net.RestClient;
 import com.fast.core.fast_core.net.callback.ISuccess;
 import com.fast.core.fast_core.ui.picture.select_one_pic.activity.PicturePickerActivity;
+import com.fast.core.fast_core.utils.log.FastLogger;
 import com.fast.frame.fastproject.R;
 import com.fast.frame.fastproject.adapter.CacheInterceptor;
 
@@ -42,12 +45,15 @@ public class Fragment1 extends Fragment {
     private TextView mTv;
     private OkHttpClient mClient;
     private String mUrl111;
+    private ImageView mImageView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1, container, false);
 
+
+        mImageView = (ImageView) view.findViewById(R.id.iv);
         mUrl111 = "http://192.168.252.128:8080/bkdy/front/card!httptest.do";
 
         //缓存文件夹
@@ -68,7 +74,7 @@ public class Fragment1 extends Fragment {
             @Override
             public void onClick(View v) {
                 testCache2();
-                startActivity(new Intent(getContext(), PicturePickerActivity.class));
+                startActivityForResult(new Intent(getContext(), PicturePickerActivity.class),1000);
 
             }
         });
@@ -76,6 +82,16 @@ public class Fragment1 extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bundle extras = data.getExtras();
+        String c = extras.getString("c");
+        FastLogger.e("ccccccccc",c);
+        Glide.with(getContext()).load(c).into(mImageView);
+    }
+
     private void testCache2() {
 
         RestClient.builder().url(mUrl111).success(new ISuccess() {
