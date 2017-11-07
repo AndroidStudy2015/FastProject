@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         >
         <activity android:name="com.fast.core.fast_core.ui.scan.SimpleScannerBarActivity"/>
+        <activity android:name="com.fast.core.fast_core.ui.picture.select_one_pic.activity.PicturePickerActivity"/>
     </application>
 
 </manifest>

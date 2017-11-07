@@ -17,7 +17,10 @@
         <!--全屏幕-->
         <item name="android:windowFullscreen">true</item>
     </style>
-
+    <style name="contextMenuAnim" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/bottom_exit</item>
+    </style>
     <!--&lt;!&ndash;透明Activity&ndash;&gt;-->
     <!--<style name="Theme.AppCompat.Translucent">-->
         <!--<item name="android:windowNoTitle">true</item>-->

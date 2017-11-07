@@ -1,6 +1,7 @@
 package com.fast.frame.fastproject.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.fast.core.fast_core.net.RestClient;
 import com.fast.core.fast_core.net.callback.ISuccess;
+import com.fast.core.fast_core.ui.picture.select_one_pic.activity.PicturePickerActivity;
 import com.fast.frame.fastproject.R;
 import com.fast.frame.fastproject.adapter.CacheInterceptor;
 
@@ -66,6 +68,7 @@ public class Fragment1 extends Fragment {
             @Override
             public void onClick(View v) {
                 testCache2();
+                startActivity(new Intent(getContext(), PicturePickerActivity.class));
 
             }
         });
