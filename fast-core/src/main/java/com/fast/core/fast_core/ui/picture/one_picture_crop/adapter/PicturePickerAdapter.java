@@ -39,7 +39,12 @@ public class PicturePickerAdapter extends RecyclerView.Adapter<PicturePickerAdap
     @Override
     public void onBindViewHolder(final FirstViewHolder holder, final int position) {
 //        ImageUtils.loadImage(mContext, absolutePath + "/" + imgs.get(position), holder.picPickerImagerView);
-        ImageUtils.loadImage(mContext, imgs.get(position), holder.picPickerImagerView);
+
+        if (position==0){
+            ImageUtils.loadImage(mContext, R.drawable.back, holder.picPickerImagerView);
+
+    }else {
+        ImageUtils.loadImage(mContext, imgs.get(position-1), holder.picPickerImagerView);}
         holder.picPickerImagerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,7 +58,7 @@ public class PicturePickerAdapter extends RecyclerView.Adapter<PicturePickerAdap
 
     @Override
     public int getItemCount() {
-        return imgs == null ? 0 : imgs.size();
+        return imgs == null ? 0 : imgs.size()+1;
     }
 
 

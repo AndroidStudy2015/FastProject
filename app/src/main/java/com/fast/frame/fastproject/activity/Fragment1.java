@@ -2,8 +2,10 @@ package com.fast.frame.fastproject.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,8 +21,11 @@ import com.bumptech.glide.Glide;
 import com.fast.core.fast_core.net.RestClient;
 import com.fast.core.fast_core.net.callback.ISuccess;
 import com.fast.core.fast_core.ui.picture.one_picture_crop.entry.PictureCrop;
+import com.fast.core.fast_core.utils.file.FileUtil;
+import com.fast.core.fast_core.utils.log.FastLogger;
 import com.fast.frame.fastproject.R;
 import com.fast.frame.fastproject.adapter.CacheInterceptor;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -77,6 +82,10 @@ public class Fragment1 extends Fragment {
             public void onClick(View v) {
                 testCache2();
                 PictureCrop.start(Fragment1.this);
+
+//                Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); //系统常量， 启动相机的关键
+//                startActivityForResult(openCameraIntent, 111); // 参数常量为自定义的request code, 在取返回结果时有用
+
             }
         });
 
@@ -85,11 +94,55 @@ public class Fragment1 extends Fragment {
     }
 
 
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (resultCode == RESULT_OK && requestCode == 111) {
+            Bitmap bm = (Bitmap) data.getExtras().get("data");
+            File bitmapFile = FileUtil.saveBitmap(bm, "/abc", 100);
+
+
+
+            //  根据Uri.fromFile(file)方法即可将path转为uri
+            Uri sourceUri = Uri.fromFile(bitmapFile);
+//               创建裁剪照片之后保存的路径，也是先用path--->file--->Uri
+            String saveDir = Environment.getExternalStorageDirectory()
+                    + "/crop";
+            File dir = new File(saveDir);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            Uri destinationUri = Uri.fromFile(new File(saveDir, System.currentTimeMillis() + "_pic_crop.jpg"));
+            UCrop.of(sourceUri, destinationUri)
+//                        .withAspectRatio(16, 9)
+                    .withMaxResultSize(900, 900)
+                    .start(getActivity());
+
+
+
+
+
+//            FastLogger.e("ccc", savePath.getAbsolutePath());
+//            mImageView.setImageBitmap(bm);
+        }
+
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            final Uri resultUri = UCrop.getOutput(data);
+            Glide.with(getContext()).load(resultUri).into(mImageView);
+
+
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            final Throwable cropError = UCrop.getError(data);
+            FastLogger.e(TAG, cropError.toString());
+        }
+
+
+
+
+
+
         if (resultCode == RESULT_OK && requestCode == PictureCrop.PIC_PICKER_REQUEST_CODE) {
             //   得到裁剪后的图片的uri
             Uri uri = Uri.parse(data.getStringExtra(PictureCrop.PIC_PICKER_RESULT_URI));

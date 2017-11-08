@@ -14,6 +14,7 @@ public class PictureCrop {
 
     public static final int PIC_PICKER_REQUEST_CODE = 1000;
     public static final String PIC_PICKER_RESULT_URI = "resultUri";
+    public static final int PIC_TAKE_PHOTO = 1700;
 
     /**
      * 在Fragment里面打开，传递Fragment.this

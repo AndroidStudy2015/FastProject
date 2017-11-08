@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -31,6 +32,7 @@ import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.PicturePicker
 import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.PopupWindowSelectDirAdapter;
 import com.fast.core.fast_core.ui.picture.one_picture_crop.bean.FolderBean;
 import com.fast.core.fast_core.ui.picture.one_picture_crop.utils.ComparatorUtils;
+import com.fast.core.fast_core.utils.file.FileUtil;
 import com.fast.core.fast_core.utils.log.FastLogger;
 import com.yalantis.ucrop.UCrop;
 
@@ -203,27 +205,41 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
             // TODO: 2017/8/28  
             @Override
             public void onImageClick(ImageView picPickerImagerView, int position) {
-                //  根据Uri.fromFile(file)方法即可将path转为uri
-                Uri sourceUri = Uri.fromFile(new File(mImgs.get(position)));
-//               创建裁剪照片之后保存的路径，也是先用path--->file--->Uri
-                String saveDir = Environment.getExternalStorageDirectory()
-                        + "/crop";
-                File dir = new File(saveDir);
-                if (!dir.exists()) {
-                    dir.mkdir();
-                }
-                Uri destinationUri = Uri.fromFile(new File(saveDir, System.currentTimeMillis() + "_pic_crop.jpg"));
-                UCrop.of(sourceUri, destinationUri)
-//                        .withAspectRatio(16, 9)
-                        .withMaxResultSize(900, 900)
-                        .start(PicturePickerActivity.this);
+                if (position == 0) {
+//                    打开摄像头
+                    Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); //系统常量， 启动相机的关键
+                    startActivityForResult(openCameraIntent, PictureCrop.PIC_TAKE_PHOTO); // 参数常量为自定义的request code, 在取返回结果时有用
 
+                } else {
+                    //  根据Uri.fromFile(file)方法即可将path转为uri
+                    Uri sourceUri = Uri.fromFile(new File(mImgs.get(position - 1)));
+                    openUcrop(sourceUri);
+                }
             }
 
 
         });
 
 
+    }
+
+    /**
+     * 传递图片的URI给Ucrop去裁剪
+     * @param sourceUri
+     */
+    private void openUcrop(Uri sourceUri) {
+        //               创建裁剪照片之后保存的路径，也是先用path--->file--->Uri
+        String saveDir = Environment.getExternalStorageDirectory()
+                + "/crop";
+        File dir = new File(saveDir);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        Uri destinationUri = Uri.fromFile(new File(saveDir, System.currentTimeMillis() + "_pic_crop.jpg"));
+        UCrop.of(sourceUri, destinationUri)
+//                        .withAspectRatio(16, 9)
+                .withMaxResultSize(900, 900)
+                .start(PicturePickerActivity.this);
     }
 
 
@@ -233,6 +249,26 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+//        打开相机，相机拍照后
+        if (resultCode == RESULT_OK && requestCode ==PictureCrop.PIC_TAKE_PHOTO) {
+            Bitmap bm = (Bitmap) data.getExtras().get("data");
+           File cameraPic = FileUtil.saveBitmap(bm,"/acq",100);
+
+            //  根据Uri.fromFile(file)方法即可将path转为uri
+            Uri sourceUri = Uri.fromFile(cameraPic);
+
+            //广播刷新相册
+            Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            intentBc.setData(sourceUri);
+            this.sendBroadcast(intentBc);
+
+            openUcrop(sourceUri);
+        }
+
+
+
+
+//
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             final Uri resultUri = UCrop.getOutput(data);
             data.putExtra(PictureCrop.PIC_PICKER_RESULT_URI, resultUri.toString());
