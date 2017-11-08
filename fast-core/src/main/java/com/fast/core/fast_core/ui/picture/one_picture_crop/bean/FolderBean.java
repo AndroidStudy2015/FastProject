@@ -1,4 +1,4 @@
-package com.fast.core.fast_core.ui.picture.select_one_pic.bean;
+package com.fast.core.fast_core.ui.picture.one_picture_crop.bean;
 
 import java.io.File;
 

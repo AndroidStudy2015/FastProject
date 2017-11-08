@@ -1,4 +1,4 @@
-package com.fast.core.fast_core.ui.picture.select_one_pic.adapter;
+package com.fast.core.fast_core.ui.picture.one_picture_crop.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bk.ydtv.fast_core.R;
-import com.fast.core.fast_core.ui.picture.select_one_pic.utils.ImageUtils;
+import com.fast.core.fast_core.ui.picture.one_picture_crop.utils.ImageUtils;
 
 import java.util.List;
 

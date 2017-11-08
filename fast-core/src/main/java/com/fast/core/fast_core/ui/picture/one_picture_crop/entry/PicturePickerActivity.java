@@ -1,4 +1,4 @@
-package com.fast.core.fast_core.ui.picture.select_one_pic.activity;
+package com.fast.core.fast_core.ui.picture.one_picture_crop.entry;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -27,11 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bk.ydtv.fast_core.R;
-import com.fast.core.fast_core.ui.picture.select_one_pic.adapter.PicturePickerAdapter;
-import com.fast.core.fast_core.ui.picture.select_one_pic.adapter.PopupWindowSelectDirAdapter;
-import com.fast.core.fast_core.ui.picture.select_one_pic.bean.FolderBean;
-import com.fast.core.fast_core.ui.picture.select_one_pic.utils.ComparatorUtils;
-import com.fast.core.fast_core.ui.picture.select_one_pic.utils.ImageUtils;
+import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.PicturePickerAdapter;
+import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.PopupWindowSelectDirAdapter;
+import com.fast.core.fast_core.ui.picture.one_picture_crop.bean.FolderBean;
+import com.fast.core.fast_core.ui.picture.one_picture_crop.utils.ComparatorUtils;
 import com.fast.core.fast_core.utils.log.FastLogger;
 import com.yalantis.ucrop.UCrop;
 
@@ -146,7 +145,6 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_picture_picker);
 
 
-
         initView();
         setClickListener();
         getImages();
@@ -205,7 +203,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
             // TODO: 2017/8/28  
             @Override
             public void onImageClick(ImageView picPickerImagerView, int position) {
-                //              根据Uri.fromFile(file)方法即可将path转为uri
+                //  根据Uri.fromFile(file)方法即可将path转为uri
                 Uri sourceUri = Uri.fromFile(new File(mImgs.get(position)));
 //               创建裁剪照片之后保存的路径，也是先用path--->file--->Uri
                 String saveDir = Environment.getExternalStorageDirectory()
@@ -214,7 +212,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
                 if (!dir.exists()) {
                     dir.mkdir();
                 }
-                Uri destinationUri = Uri.fromFile(new File(saveDir, "crop.jpg"));
+                Uri destinationUri = Uri.fromFile(new File(saveDir, System.currentTimeMillis() + "_pic_crop.jpg"));
                 UCrop.of(sourceUri, destinationUri)
 //                        .withAspectRatio(16, 9)
                         .withMaxResultSize(900, 900)
@@ -229,6 +227,25 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     }
 
 
+    private static final String TAG = "PicturePickerActivity";
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            final Uri resultUri = UCrop.getOutput(data);
+            data.putExtra(PictureCrop.PIC_PICKER_RESULT_URI, resultUri.toString());
+            setResult(RESULT_OK, data);
+            finish();
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            final Throwable cropError = UCrop.getError(data);
+            FastLogger.e(TAG, cropError.toString());
+            Toast.makeText(PicturePickerActivity.this, "图片裁剪失败", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 
 
     /**
@@ -412,26 +429,6 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         }
 
     }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
-            final Uri resultUri = UCrop.getOutput(data);
-            String realFilePath = ImageUtils.getRealFilePath(PicturePickerActivity.this, resultUri);
-            data.putExtra("c",realFilePath);
-            setResult(111,data);
-            finish();
-            FastLogger.e("ccc",resultUri+"");
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            final Throwable cropError = UCrop.getError(data);
-        }
-
-
-
-    }
-
 
 
     @Override

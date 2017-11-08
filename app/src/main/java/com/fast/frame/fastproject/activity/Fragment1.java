@@ -2,6 +2,7 @@ package com.fast.frame.fastproject.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.fast.core.fast_core.net.RestClient;
 import com.fast.core.fast_core.net.callback.ISuccess;
-import com.fast.core.fast_core.ui.picture.select_one_pic.activity.PicturePickerActivity;
-import com.fast.core.fast_core.utils.log.FastLogger;
+import com.fast.core.fast_core.ui.picture.one_picture_crop.entry.PictureCrop;
 import com.fast.frame.fastproject.R;
 import com.fast.frame.fastproject.adapter.CacheInterceptor;
 
@@ -35,6 +35,8 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by apple on 2017/10/21.
@@ -74,8 +76,7 @@ public class Fragment1 extends Fragment {
             @Override
             public void onClick(View v) {
                 testCache2();
-                startActivityForResult(new Intent(getContext(), PicturePickerActivity.class),1000);
-
+                PictureCrop.start(Fragment1.this);
             }
         });
 
@@ -83,13 +84,21 @@ public class Fragment1 extends Fragment {
         return view;
     }
 
+
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bundle extras = data.getExtras();
-        String c = extras.getString("c");
-        FastLogger.e("ccccccccc",c);
-        Glide.with(getContext()).load(c).into(mImageView);
+        if (resultCode == RESULT_OK && requestCode == PictureCrop.PIC_PICKER_REQUEST_CODE) {
+            //   得到裁剪后的图片的uri
+            Uri uri = Uri.parse(data.getStringExtra(PictureCrop.PIC_PICKER_RESULT_URI));
+            //   显示照片
+            Glide.with(getContext()).load(uri).into(mImageView);
+            //   上传服务器
+            // TODO: 2017/11/8 ............
+        }
+//        裁剪失败的情况在PicturePickerActivity里处理了，这里不用管了
     }
 
     private void testCache2() {
@@ -97,7 +106,7 @@ public class Fragment1 extends Fragment {
         RestClient.builder().url(mUrl111).success(new ISuccess() {
             @Override
             public void onSuccess(String response) {
-                Log.e(TAG,response);
+                Log.e(TAG, response);
                 Log.e(TAG, "==========================================================================================");
 
             }
@@ -120,7 +129,7 @@ public class Fragment1 extends Fragment {
                 Request request = new Request.Builder()
                         .url(url111)
 
-                        .addHeader("Cache-Control","max-age=30")
+                        .addHeader("Cache-Control", "max-age=30")
                         .build();
                 Call call1 = mClient.newCall(request);
                 Response response1 = null;

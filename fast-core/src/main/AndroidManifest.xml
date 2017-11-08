@@ -12,7 +12,7 @@
         <activity android:name="com.fast.core.fast_core.ui.scan.SimpleScannerBarActivity"/>
 
         <activity
-            android:name="com.fast.core.fast_core.ui.picture.select_one_pic.activity.PicturePickerActivity"
+            android:name="com.fast.core.fast_core.ui.picture.one_picture_crop.entry.PicturePickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
 
