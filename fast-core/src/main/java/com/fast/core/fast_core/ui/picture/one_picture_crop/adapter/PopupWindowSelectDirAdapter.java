@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bk.ydtv.fast_core.R;
 import com.fast.core.fast_core.ui.picture.one_picture_crop.bean.FolderBean;
-import com.fast.core.fast_core.ui.picture.one_picture_crop.utils.ImageUtils;
+import com.fast.core.fast_core.utils.ImageUtils;
 
 import java.io.File;
 import java.util.ArrayList;

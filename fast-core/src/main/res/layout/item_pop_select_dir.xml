@@ -8,9 +8,9 @@
         android:id="@+id/iv_first_img"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:scaleType="centerCrop"
         android:layout_centerVertical="true"
-      />
+        android:scaleType="centerCrop"
+        />
 
 
     <LinearLayout
@@ -27,17 +27,18 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black_bg"
             android:text="相册"
-            android:textSize="21sp"/>
+            android:textColor="@color/black_bg"
+            android:textSize="17sp"/>
 
         <TextView
+            android:layout_marginTop="5dp"
             android:id="@+id/tv_img_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="123张"
             android:textColor="@color/bt_weichat_default_bg"
-
-            android:text="123张"/>
+            android:textSize="11sp"/>
 
     </LinearLayout>
 

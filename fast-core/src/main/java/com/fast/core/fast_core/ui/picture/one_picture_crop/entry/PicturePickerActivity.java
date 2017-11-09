@@ -1,10 +1,10 @@
 package com.fast.core.fast_core.ui.picture.one_picture_crop.entry;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -32,7 +32,6 @@ import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.PicturePicker
 import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.PopupWindowSelectDirAdapter;
 import com.fast.core.fast_core.ui.picture.one_picture_crop.bean.FolderBean;
 import com.fast.core.fast_core.ui.picture.one_picture_crop.utils.ComparatorUtils;
-import com.fast.core.fast_core.utils.file.FileUtil;
 import com.fast.core.fast_core.utils.log.FastLogger;
 import com.yalantis.ucrop.UCrop;
 
@@ -73,8 +72,6 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     private List<String> mDirPathList = new ArrayList<>();
 
 
-    private PopupWindowSelectDirAdapter mPopupWindowSelectDirAdapter;
-
     /**
      * 存放所有图片path的集合
      */
@@ -98,6 +95,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     private ImageView mIvBack;
 
 
+    @SuppressLint("HandlerLeak")//handler这样写可能引起内存泄漏
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
 
@@ -139,6 +137,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         }
 
     };
+    private File mCameraTempImageFile;
 
 
     @Override
@@ -171,7 +170,8 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         mIvBack = (ImageView) findViewById(R.id.iv_back);
 
 //       高仿微信，小三角触摸变灰色
-        mRlSelectDir.setOnTouchListener(new View.OnTouchListener() {
+        View.OnTouchListener l = new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -190,7 +190,8 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
 
                 return false;
             }
-        });
+        };
+        mRlSelectDir.setOnTouchListener(l);
 
 
         mPicPickerRecyclerView = (RecyclerView) findViewById(R.id.pic_picker_recyclerview);
@@ -206,8 +207,22 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onImageClick(ImageView picPickerImagerView, int position) {
                 if (position == 0) {
-//                    打开摄像头
+                    // 打开摄像头
                     Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); //系统常量， 启动相机的关键
+
+
+                    String saveDir = Environment.getExternalStorageDirectory()
+                            + "/camera_temp";
+                    File dir = new File(saveDir);
+                    if (!dir.exists()) {
+                        dir.mkdir();
+                    }
+
+                    mCameraTempImageFile = new File(saveDir, "temp_img.jpg");
+
+                    Uri imageUri = Uri.fromFile(mCameraTempImageFile);
+                    //指定照片保存路径（SD卡），temp_img.jpg为一个临时文件，每次拍照后这个图片都会被替换
+                    openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                     startActivityForResult(openCameraIntent, PictureCrop.PIC_TAKE_PHOTO); // 参数常量为自定义的request code, 在取返回结果时有用
 
                 } else {
@@ -225,6 +240,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
 
     /**
      * 传递图片的URI给Ucrop去裁剪
+     *
      * @param sourceUri
      */
     private void openUcrop(Uri sourceUri) {
@@ -237,8 +253,8 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         }
         Uri destinationUri = Uri.fromFile(new File(saveDir, System.currentTimeMillis() + "_pic_crop.jpg"));
         UCrop.of(sourceUri, destinationUri)
-//                        .withAspectRatio(16, 9)
-                .withMaxResultSize(900, 900)
+                .withAspectRatio(1, 1)//裁剪比例
+                .withMaxResultSize(900, 900)//裁剪后图片的最大尺寸
                 .start(PicturePickerActivity.this);
     }
 
@@ -250,29 +266,27 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 //        打开相机，相机拍照后
-        if (resultCode == RESULT_OK && requestCode ==PictureCrop.PIC_TAKE_PHOTO) {
-            Bitmap bm = (Bitmap) data.getExtras().get("data");
-           File cameraPic = FileUtil.saveBitmap(bm,"/acq",100);
+        if (resultCode == RESULT_OK && requestCode == PictureCrop.PIC_TAKE_PHOTO) {
 
             //  根据Uri.fromFile(file)方法即可将path转为uri
-            Uri sourceUri = Uri.fromFile(cameraPic);
-
-            //广播刷新相册
-            Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            intentBc.setData(sourceUri);
-            this.sendBroadcast(intentBc);
-
+            Uri sourceUri = Uri.fromFile(mCameraTempImageFile);
             openUcrop(sourceUri);
         }
 
 
-
-
 //
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            //得到裁剪后的图片uri
             final Uri resultUri = UCrop.getOutput(data);
+            //传递数据给外界
             data.putExtra(PictureCrop.PIC_PICKER_RESULT_URI, resultUri.toString());
             setResult(RESULT_OK, data);
+
+            //广播刷新相册(注意：如果一直用的是覆盖同一个文件名的话，刷新时会没有效果，他认为这个文件我已经刷新过了)
+            Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            intentBc.setData(resultUri);
+            this.sendBroadcast(intentBc);
+
             finish();
         } else if (resultCode == UCrop.RESULT_ERROR) {
             final Throwable cropError = UCrop.getError(data);
@@ -377,10 +391,10 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         mRcvSelectDir = (RecyclerView) contentView.findViewById(R.id.rcv_select_dir);
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mRcvSelectDir.setLayoutManager(manager);
-        mPopupWindowSelectDirAdapter = new PopupWindowSelectDirAdapter(this, mFolderBeanList);
-        mRcvSelectDir.setAdapter(mPopupWindowSelectDirAdapter);
+        PopupWindowSelectDirAdapter popupWindowSelectDirAdapter = new PopupWindowSelectDirAdapter(this, mFolderBeanList);
+        mRcvSelectDir.setAdapter(popupWindowSelectDirAdapter);
 
-        mPopupWindowSelectDirAdapter.setOnItemClickListener(new PopupWindowSelectDirAdapter.OnItemClickListener() {
+        popupWindowSelectDirAdapter.setOnItemClickListener(new PopupWindowSelectDirAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(File mImgDir1) {
                 if (mImgDir1 != null) {

@@ -113,6 +113,10 @@ public final class FileUtil {
     /**
      * 保存Bitmap到SD卡中
      *
+     *       从相机拍摄照片后，使用这个方法保存照片到本地，为何像素很低呢
+     *       http://blog.csdn.net/quan648997767/article/details/37526455,
+     *       其实不是这个方法的问题，是因为系统返回的那个拍照照片时缩略图
+     *
      * @param dir      目录名,只需要写自己的相对目录名即可
      * @param compress 压缩比例 100是不压缩,值约小压缩率越高
      * @return 返回该文件
@@ -269,6 +273,7 @@ public final class FileUtil {
 
     /**
      * 通知系统刷新系统相册，使照片展现出来
+     * 这个方法好像不管用，可以用下面注释掉的发广播的方法，在具体代码里直接用，这里不便于抽取方法
      */
     private static void refreshDCIM() {
         if (Build.VERSION.SDK_INT >= 19) {
@@ -281,6 +286,12 @@ public final class FileUtil {
             Fast.getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" +
                     Environment.getExternalStorageDirectory())));
         }
+
+
+//        //广播刷新相册
+//        Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        intentBc.setData(sourceUri);
+//        this.sendBroadcast(intentBc);
     }
 
     /**
@@ -366,6 +377,12 @@ public final class FileUtil {
         }
     }
 
+    /**
+     * 资源URI转为文件路径
+     * @param context
+     * @param uri
+     * @return
+     */
     public static String getRealFilePath(final Context context, final Uri uri) {
         if (null == uri) return null;
         final String scheme = uri.getScheme();

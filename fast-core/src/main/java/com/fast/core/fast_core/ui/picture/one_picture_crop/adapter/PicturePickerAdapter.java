@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bk.ydtv.fast_core.R;
-import com.fast.core.fast_core.ui.picture.one_picture_crop.utils.ImageUtils;
+import com.fast.core.fast_core.utils.ImageUtils;
 
 import java.util.List;
 
@@ -40,11 +40,14 @@ public class PicturePickerAdapter extends RecyclerView.Adapter<PicturePickerAdap
     public void onBindViewHolder(final FirstViewHolder holder, final int position) {
 //        ImageUtils.loadImage(mContext, absolutePath + "/" + imgs.get(position), holder.picPickerImagerView);
 
-        if (position==0){
-            ImageUtils.loadImage(mContext, R.drawable.back, holder.picPickerImagerView);
-
-    }else {
-        ImageUtils.loadImage(mContext, imgs.get(position-1), holder.picPickerImagerView);}
+        if (position == 0) {
+            //我自己下载的照相机图片有点大了，最好让美工设计一个正好的照相机图片，省去这步判断
+            holder.picPickerImagerView.setPadding(150, 150, 150, 150);
+            ImageUtils.loadImage(mContext, R.drawable.camera, holder.picPickerImagerView, R.drawable.default_pic);
+        } else {
+            holder.picPickerImagerView.setPadding(0, 0, 0, 0);
+            ImageUtils.loadImage(mContext, imgs.get(position - 1), holder.picPickerImagerView);
+        }
         holder.picPickerImagerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +61,7 @@ public class PicturePickerAdapter extends RecyclerView.Adapter<PicturePickerAdap
 
     @Override
     public int getItemCount() {
-        return imgs == null ? 0 : imgs.size()+1;
+        return imgs == null ? 0 : imgs.size() + 1;
     }
 
 

@@ -1,16 +1,18 @@
 package com.fast.core.fast_core.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.fast.core.fast_core.utils.dimen.DimenUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.fast.core.fast_core.utils.dimen.DimenUtil;
 
 /**
  * Created by apple on 2017/8/18.
@@ -45,7 +47,7 @@ public class ImageUtils {
     }
 
     /**
-     * 加载本地图片
+     * 加载本地图片，无占位图
      *
      * @param context
      * @param resourceID
@@ -54,6 +56,20 @@ public class ImageUtils {
     public static void loadImage(Context context, int resourceID, ImageView imageView) {
 
         Glide.with(context).load(resourceID).into(imageView);
+
+    }
+
+
+    /**
+     * 加载本地图片
+     *
+     * @param context
+     * @param resourceID
+     * @param imageView
+     */
+    public static void loadImage(Context context, int resourceID, ImageView imageView,int placeholderResourceID) {
+
+        Glide.with(context).load(resourceID).placeholder(placeholderResourceID).into(imageView);
 
     }
 
@@ -167,6 +183,22 @@ public class ImageUtils {
 
             }
         });
+    }
+
+    public static int getScreenWidth(Context context) {
+
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        int width = dm.widthPixels;
+        return width;
+    }
+
+    public static int getScreenHeight(Context context) {
+
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        int height = dm.heightPixels;
+        return height;
     }
 
 
