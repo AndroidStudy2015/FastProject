@@ -1,4 +1,4 @@
-package com.fast.core.fast_core.utils;
+package com.fast.core.fast_core.utils.image;
 
 import android.content.Context;
 import android.content.res.Resources;

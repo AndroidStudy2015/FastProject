@@ -10,8 +10,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bk.ydtv.fast_core.R;
-import com.fast.core.fast_core.ui.picture.one_picture_crop.bean.FolderBean;
-import com.fast.core.fast_core.utils.ImageUtils;
+import com.fast.core.fast_core.ui.picture.common.bean.FolderBean;
+import com.fast.core.fast_core.utils.image.ImageUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +21,8 @@ import java.util.List;
  * Created by apple on 2017/8/21.
  */
 
-public class PopupWindowSelectDirAdapter extends RecyclerView.Adapter<PopupWindowSelectDirAdapter.MyVH> {
+
+public class SinglePopupWindowSelectDirAdapter extends RecyclerView.Adapter<SinglePopupWindowSelectDirAdapter.MyVH> {
     private Context context;
     private List<FolderBean> dirPathList;
     private OnItemClickListener mOnItemClickListener;
@@ -31,7 +32,7 @@ public class PopupWindowSelectDirAdapter extends RecyclerView.Adapter<PopupWindo
         mOnItemClickListener = onItemClickListener;
     }
 
-    public PopupWindowSelectDirAdapter(Context context, List<FolderBean> dirPathList) {
+    public SinglePopupWindowSelectDirAdapter(Context context, List<FolderBean> dirPathList) {
         this.context = context;
         this.dirPathList = dirPathList;
 

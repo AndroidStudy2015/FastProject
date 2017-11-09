@@ -11,17 +11,30 @@
         >
         <activity android:name="com.fast.core.fast_core.ui.scan.SimpleScannerBarActivity"/>
 
+
+        <!--选择一个照片-->
         <activity
-            android:name="com.fast.core.fast_core.ui.picture.one_picture_crop.entry.PicturePickerActivity"
+            android:name="com.fast.core.fast_core.ui.picture.one_picture_crop.entry.SinglePicturePickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
 
 
-
+        <!--裁剪-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+
+        <activity android:name="com.fast.core.fast_core.ui.picture.select_multi_pictures.activity.FirstActivity"/>
+<activity android:name="com.fast.core.fast_core.ui.picture.select_multi_pictures.activity.YuLanActivity"/>
+        <activity android:name="com.fast.core.fast_core.ui.picture.select_multi_pictures.activity.YuLanAllActivity"/>
+        <!--选择多个照片-->
+        <activity
+            android:name="com.fast.core.fast_core.ui.picture.select_multi_pictures.activity.PicturePickerActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

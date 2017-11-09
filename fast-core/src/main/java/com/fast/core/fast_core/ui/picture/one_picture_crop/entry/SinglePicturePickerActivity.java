@@ -28,10 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bk.ydtv.fast_core.R;
-import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.PicturePickerAdapter;
-import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.PopupWindowSelectDirAdapter;
-import com.fast.core.fast_core.ui.picture.one_picture_crop.bean.FolderBean;
-import com.fast.core.fast_core.ui.picture.one_picture_crop.utils.ComparatorUtils;
+import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.SinglePicturePickerAdapter;
+import com.fast.core.fast_core.ui.picture.one_picture_crop.adapter.SinglePopupWindowSelectDirAdapter;
+import com.fast.core.fast_core.ui.picture.common.bean.FolderBean;
+import com.fast.core.fast_core.ui.picture.common.utils.ComparatorUtils;
 import com.fast.core.fast_core.utils.log.FastLogger;
 import com.yalantis.ucrop.UCrop;
 
@@ -46,7 +46,7 @@ import java.util.List;
  * 例如：你明明通过一个文件找到了父文件夹，但这个父文件夹也可能为null
  */
 
-public class PicturePickerActivity extends AppCompatActivity implements View.OnClickListener {
+public class SinglePicturePickerActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView mPicPickerRecyclerView;
 
     private ProgressDialog mProgressDialog;
@@ -85,7 +85,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     private View mPopTop;
     private View mRootview;
     private RecyclerView mRcvSelectDir;
-    private PicturePickerAdapter mPicturePickerAdapter;
+    private SinglePicturePickerAdapter mPicturePickerAdapter;
 
 
     private final int SHOW_ALL_IMG = 0x002;
@@ -143,7 +143,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_picture_picker);
+        setContentView(R.layout.activity_picture_picker_one);
 
 
         initView();
@@ -195,12 +195,12 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
 
 
         mPicPickerRecyclerView = (RecyclerView) findViewById(R.id.pic_picker_recyclerview);
-        mPicturePickerAdapter = new PicturePickerAdapter(PicturePickerActivity.this, mImgs);
+        mPicturePickerAdapter = new SinglePicturePickerAdapter(SinglePicturePickerActivity.this, mImgs);
         mPicPickerRecyclerView.setAdapter(mPicturePickerAdapter);//为了避免弄no adpater，这里先设置一个空数据的adapter
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(PicturePickerActivity.this, 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(SinglePicturePickerActivity.this, 3);
         mPicPickerRecyclerView.setLayoutManager(gridLayoutManager);
 
-        mPicturePickerAdapter.setOnPicturePickerItemClickLisnter(new PicturePickerAdapter.OnPicturePickerItemClickLisnter() {
+        mPicturePickerAdapter.setOnPicturePickerItemClickLisnter(new SinglePicturePickerAdapter.OnPicturePickerItemClickLisnter() {
 
 
             // TODO: 2017/8/28  
@@ -255,11 +255,11 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         UCrop.of(sourceUri, destinationUri)
                 .withAspectRatio(1, 1)//裁剪比例
                 .withMaxResultSize(900, 900)//裁剪后图片的最大尺寸
-                .start(PicturePickerActivity.this);
+                .start(SinglePicturePickerActivity.this);
     }
 
 
-    private static final String TAG = "PicturePickerActivity";
+    private static final String TAG = "SinglePicturePickerActivity";
 
 
     @Override
@@ -291,7 +291,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         } else if (resultCode == UCrop.RESULT_ERROR) {
             final Throwable cropError = UCrop.getError(data);
             FastLogger.e(TAG, cropError.toString());
-            Toast.makeText(PicturePickerActivity.this, "图片裁剪失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SinglePicturePickerActivity.this, "图片裁剪失败", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -315,7 +315,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
             @Override
             public void run() {
                 Uri mImageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                ContentResolver mContentResolver = PicturePickerActivity.this
+                ContentResolver mContentResolver = SinglePicturePickerActivity.this
                         .getContentResolver();
 
                 // 只查询jpeg和png的图片
@@ -367,7 +367,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
      */
     private void initPopupWindowView() {
         //设置contentView
-        View contentView = LayoutInflater.from(PicturePickerActivity.this).inflate(R.layout.popuplayout, null);
+        View contentView = LayoutInflater.from(SinglePicturePickerActivity.this).inflate(R.layout.popuplayout, null);
         mPopupWindow = new PopupWindow(contentView,
                 ViewGroup.LayoutParams.MATCH_PARENT, mPicPickerRecyclerView.getHeight(), true);
         mPopupWindow.setContentView(contentView);
@@ -375,7 +375,7 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         mPopTop = contentView.findViewById(R.id.ll_pop_top);
         mPopTop.setOnClickListener(this);
         //显示PopupWindow
-//        mRootview = LayoutInflater.from(PicturePickerActivity.this).inflate(R.layout.activity_picture_picker, null);
+//        mRootview = LayoutInflater.from(SinglePicturePickerActivity.this).inflate(R.layout.activity_picture_picker_one, null);
         mRootview = mPicPickerRecyclerView;
         //外部是否可以点击
         mPopupWindow.setFocusable(false);//必须Focusable设置为false，setOutsideTouchable设置为false点击外部才不会消失
@@ -391,10 +391,10 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         mRcvSelectDir = (RecyclerView) contentView.findViewById(R.id.rcv_select_dir);
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mRcvSelectDir.setLayoutManager(manager);
-        PopupWindowSelectDirAdapter popupWindowSelectDirAdapter = new PopupWindowSelectDirAdapter(this, mFolderBeanList);
-        mRcvSelectDir.setAdapter(popupWindowSelectDirAdapter);
+        SinglePopupWindowSelectDirAdapter singlePopupWindowSelectDirAdapter = new SinglePopupWindowSelectDirAdapter(this, mFolderBeanList);
+        mRcvSelectDir.setAdapter(singlePopupWindowSelectDirAdapter);
 
-        popupWindowSelectDirAdapter.setOnItemClickListener(new PopupWindowSelectDirAdapter.OnItemClickListener() {
+        singlePopupWindowSelectDirAdapter.setOnItemClickListener(new SinglePopupWindowSelectDirAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(File mImgDir1) {
                 if (mImgDir1 != null) {

@@ -3,7 +3,7 @@
  * @filename : MD5.java
  * @version :
  */
-package com.fast.core.fast_core.utils;
+package com.fast.core.fast_core.utils.encrypt;
 
 import java.security.MessageDigest;
 

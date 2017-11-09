@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bk.ydtv.fast_core.R;
-import com.fast.core.fast_core.utils.ImageUtils;
+import com.fast.core.fast_core.utils.image.ImageUtils;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by apple on 2017/8/18.
  */
 
-public class PicturePickerAdapter extends RecyclerView.Adapter<PicturePickerAdapter.FirstViewHolder> {
+public class SinglePicturePickerAdapter extends RecyclerView.Adapter<SinglePicturePickerAdapter.FirstViewHolder> {
     private Context mContext;
     private List<String> imgs;
     OnPicturePickerItemClickLisnter onPicturePickerItemClickLisnter;
@@ -25,7 +25,7 @@ public class PicturePickerAdapter extends RecyclerView.Adapter<PicturePickerAdap
         this.onPicturePickerItemClickLisnter = onPicturePickerItemClickLisnter;
     }
 
-    public PicturePickerAdapter(Context context, List<String> imgs) {
+    public SinglePicturePickerAdapter(Context context, List<String> imgs) {
         mContext = context;
         this.imgs = imgs;
     }
@@ -33,7 +33,7 @@ public class PicturePickerAdapter extends RecyclerView.Adapter<PicturePickerAdap
     @Override
     public FirstViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        return new FirstViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_pic_picker, parent, false));
+        return new FirstViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_pic_picker_one, parent, false));
     }
 
     @Override

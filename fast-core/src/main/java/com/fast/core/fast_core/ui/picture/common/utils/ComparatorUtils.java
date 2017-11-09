@@ -1,6 +1,6 @@
-package com.fast.core.fast_core.ui.picture.one_picture_crop.utils;
+package com.fast.core.fast_core.ui.picture.common.utils;
 
-import com.fast.core.fast_core.ui.picture.one_picture_crop.bean.FolderBean;
+import com.fast.core.fast_core.ui.picture.common.bean.FolderBean;
 
 import java.io.File;
 import java.util.ArrayList;

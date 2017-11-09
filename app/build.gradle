@@ -41,7 +41,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpcore:4.4.4'
     //为了下载回调进度
     //    compile 'com.zhy:okhttputils:2.6.2'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+//    compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile project(':fast-core')
     //ButterKnife依赖
     compile 'com.jakewharton:butterknife:8.6.0'

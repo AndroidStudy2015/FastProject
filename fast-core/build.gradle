@@ -60,4 +60,7 @@ dependencies {
     compile 'me.dm7.barcodescanner:zbar:1.9.3'
     //图片裁剪
     compile 'com.github.yalantis:ucrop:2.2.1-native'
+    //PhotoView
+    compile 'com.github.chrisbanes:PhotoView:1.2.6'
+
 }

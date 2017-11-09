@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.fast.core.fast_core.net.RestClient;
 import com.fast.core.fast_core.net.callback.ISuccess;
 import com.fast.core.fast_core.ui.picture.one_picture_crop.entry.PictureCrop;
+import com.fast.core.fast_core.ui.picture.select_multi_pictures.activity.FirstActivity;
 import com.fast.frame.fastproject.R;
 import com.fast.frame.fastproject.adapter.CacheInterceptor;
 
@@ -76,7 +77,8 @@ public class Fragment1 extends Fragment {
             @Override
             public void onClick(View v) {
                 testCache2();
-                PictureCrop.start(Fragment1.this);
+                startActivity(new Intent(getActivity(), FirstActivity.class));
+//                PictureCrop.start(Fragment1.this);
 
 //                Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); //系统常量， 启动相机的关键
 //                startActivityForResult(openCameraIntent, 111); // 参数常量为自定义的request code, 在取返回结果时有用

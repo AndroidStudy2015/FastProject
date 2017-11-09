@@ -28,7 +28,7 @@ public class PictureCrop {
     }
 
     private static void start(@NonNull Fragment fragment, int requestCode) {
-        fragment.startActivityForResult(new Intent(fragment.getActivity(), PicturePickerActivity.class), requestCode);
+        fragment.startActivityForResult(new Intent(fragment.getActivity(), SinglePicturePickerActivity.class), requestCode);
     }
 
 
@@ -44,7 +44,7 @@ public class PictureCrop {
     }
 
     private static void start(@NonNull Activity activity, int requestCode) {
-        activity.startActivityForResult(new Intent(activity, PicturePickerActivity.class), requestCode);
+        activity.startActivityForResult(new Intent(activity, SinglePicturePickerActivity.class), requestCode);
     }
 
 //    用法示例：

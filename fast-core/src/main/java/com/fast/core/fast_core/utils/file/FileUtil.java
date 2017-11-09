@@ -146,7 +146,7 @@ public final class FileUtil {
                 if (bos != null) {
                     bos.close();
                 }
-                //关闭流
+                //关闭流 加密
                 if (fos != null) {
                     fos.flush();
                 }
