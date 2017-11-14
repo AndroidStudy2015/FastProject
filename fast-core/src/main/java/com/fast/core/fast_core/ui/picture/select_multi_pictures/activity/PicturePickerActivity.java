@@ -47,7 +47,13 @@ import java.util.List;
  */
 
 public class PicturePickerActivity extends AppCompatActivity implements View.OnClickListener {
+    /**
+     * 在PicturePickerActivity点击"完成"按钮后的结果码
+     */
     public static final int RESULT_CODE_SELECTED_PATH_LIST = 10;
+    /**
+     * 从YuLanActivity预览页面直接点击"完成"后，调到PicturePickerActivity，此时立刻关闭PicturePickerActivity页面，同时传递的结果码
+     */
     public static final int RESULT_CODE_SELECTED_PATH_LIST_FINISH = 9;
     private RecyclerView mPicPickerRecyclerView;
 

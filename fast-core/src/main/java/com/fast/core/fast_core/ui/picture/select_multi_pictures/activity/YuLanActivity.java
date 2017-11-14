@@ -28,11 +28,17 @@ import com.fast.core.fast_core.utils.image.ImageUtils;
 
 import java.util.ArrayList;
 
-
+/**
+ * 这个Activity指的是点击PicturePickerActivity页面右下角的预览打开的页面
+ */
 public class YuLanActivity extends AppCompatActivity implements View.OnClickListener {
-
-
+    /**
+     * 点击点击预览页面的"back箭头按钮"（指的是点击PicturePickerActivity页面右下角的预览打开的页面）
+     */
     public static final int RESULT_CODE_SELECTED_PATH_LIST_YU_LAN = 11;
+    /**
+     * 点击预览页面的"完成按钮"（指的是点击PicturePickerActivity页面右下角的预览打开的页面）
+     */
     public static final int RESULT_CODE_SELECTED_PATH_LIST_YU_LAN_FINISH = 12;
     private ArrayList<String> mYuLanLists;
     private ArrayList<String> mSencondShaiXuanYuLanLists;

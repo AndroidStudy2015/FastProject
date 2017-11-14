@@ -30,15 +30,12 @@ import com.fast.core.fast_core.utils.image.ImageUtils;
 
 import java.util.ArrayList;
 
-import static com.fast.core.fast_core.ui.picture.select_multi_pictures.activity.YuLanActivity.RESULT_CODE_SELECTED_PATH_LIST_YU_LAN_FINISH;
-
 /**
  * 这个Activity是用来预览本文件夹下的所有的照片集合，下面的横向的scrollview显示的是已经选中的集合（存在一个微信也同样存在的bug，跨文件夹预览点击bug）
  */
 public class YuLanAllActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-    public static final int RESULT_CODE_SELECTED_PATH_LIST_YU_LAN = 11;
+//    public static final int RESULT_CODE_SELECTED_PATH_LIST_YU_LAN = 11;
     private ArrayList<String> mSelectedYuLanLists;
     private HackyViewPager mViewPager;
     private TextView mTvYuLanIndex;
@@ -378,7 +375,8 @@ public class YuLanAllActivity extends AppCompatActivity implements View.OnClickL
     private void finishAndSetResult() {
         Intent intent = new Intent();
         intent.putStringArrayListExtra("mSencondShaiXuanYuLanLists", mSelectedYuLanLists);
-        setResult(RESULT_CODE_SELECTED_PATH_LIST_YU_LAN, intent);
+        //这里用的结果码是YuLanActivity，因为对于PicturePickerActivity来说，YuLanActivity和YuLanAllActivity，点击back图标的效果是一样的
+        setResult(YuLanActivity.RESULT_CODE_SELECTED_PATH_LIST_YU_LAN, intent);
         finish();
     }
 
@@ -394,7 +392,9 @@ public class YuLanAllActivity extends AppCompatActivity implements View.OnClickL
 
             CunZhi.mSelectPathList.clear();
             CunZhi.mSelectPathList.addAll(mSelectedYuLanLists);
-            setResult(RESULT_CODE_SELECTED_PATH_LIST_YU_LAN_FINISH);
+            //这里用的结果码是YuLanActivity，因为对于PicturePickerActivity来说，YuLanActivity和YuLanAllActivity，点击finish按钮的效果是一样的
+
+            setResult(YuLanActivity.RESULT_CODE_SELECTED_PATH_LIST_YU_LAN_FINISH);
             finish();
         }
 
