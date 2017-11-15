@@ -436,7 +436,8 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         folderBean.setFolderFile(null);
         folderBean.setFolderName("所有照片");
         folderBean.setImagCount(allImgPathList.size());
-        folderBean.setFolderFirstPic(allImgPathList.get(0));
+        if (allImgPathList.size()!=0){
+        folderBean.setFolderFirstPic(allImgPathList.get(0));}
         folderBean.setFolderPath(null);
 
 //        把这个FolderBean放在了集合的第一个
