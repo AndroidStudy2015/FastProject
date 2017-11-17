@@ -13,54 +13,40 @@ import java.util.List;
 
 public class ComparatorUtils {
 
-
     /**
-     * 将所有的城市名字按照全拼音排序
+     * 将所有的城市（City这个Javabean）按照全拼音排序
      *
      * @return
      */
-    public static List<String> sortCityList(List<String> cityStrings) {
-
-        List<City> cityList = new ArrayList<>();
+    public static List<City> sortCityList( List<City> originalCityList) {
 
 
-        for (int i = 0; i < cityStrings.size(); i++) {
-            String cityName = cityStrings.get(i);
-            String cityQuanPin = PinYinUtils.getCityQuanPin(cityName);
-            cityList.add(new City(cityName, cityQuanPin));
-        }
-
-        Collections.sort(cityList, new Comparator<City>() {
+        Collections.sort(originalCityList, new Comparator<City>() {
 
             @Override
             public int compare(City c1, City c2) {
                 return c1.getPinyin().compareTo(c2.getPinyin());
             }
         });
-        List<String> sortCityList = new ArrayList<>();
-
-
-        for (int i = 0; i < cityList.size(); i++) {
-            sortCityList.add(cityList.get(i).getName());
-        }
+//          经过上面的排序，originalCityList已经是排好序的列表了
 
 //        ★ 把"#"开头的城市都移动到整个list的最后
 //        如果排序后城市列表第一位拼音首字母是"#"，把所有"#"的城市都排在最后
-        if ("#".equals(PinYinUtils.getPinYinFirstLetter(sortCityList.get(0)))) {
+        if ("#".equals(PinYinUtils.getPinYinFirstLetter(originalCityList.get(0).getName()))) {
 
 //            找到列表中，以A字母开头的位置
             int positionFirstHanZi = 0;
-            for (int i = 0; i < sortCityList.size(); i++) {
-                String pinYinFirstLetter = PinYinUtils.getPinYinFirstLetter(sortCityList.get(i));
+            for (int i = 0; i < originalCityList.size(); i++) {
+                String pinYinFirstLetter = PinYinUtils.getPinYinFirstLetter(originalCityList.get(i).getName());
                 if (!("#".equals(pinYinFirstLetter))) {
                     positionFirstHanZi = i;
                     break;
                 }
             }
 
-            List<String> isNotHanZiList = sortCityList.subList(0, positionFirstHanZi);
-            List<String> hanZiList = sortCityList.subList(positionFirstHanZi, sortCityList.size());
-            List<String> reSortCityList = new ArrayList<>();
+            List<City> isNotHanZiList = originalCityList.subList(0, positionFirstHanZi);
+            List<City> hanZiList = originalCityList.subList(positionFirstHanZi, originalCityList.size());
+            List<City> reSortCityList = new ArrayList<>();
             reSortCityList.addAll(hanZiList);
             reSortCityList.addAll(isNotHanZiList);
 
@@ -70,22 +56,24 @@ public class ComparatorUtils {
 
 
 
-        return sortCityList;
+        return originalCityList;
     }
+
+
 
 
     /**
      * 传入按字母排序号的城市列表，生成一串以城市列表首字母组成的字符串
      * 例如：AAAAAABBBBBBCCCCCDDDDDDDDEEEEEFFFFFZZZZZ
      *
-     * @param cityData
+     * @param sortCityList
      * @return
      */
-    public static String getSortCityListFirstLetterToString(List<String> cityData) {
+    public static String getSortCityListFirstLetterToString(List<City> sortCityList) {
 
         String s = "";
-        for (int i = 0; i < cityData.size(); i++) {
-            String city = cityData.get(i);
+        for (int i = 0; i < sortCityList.size(); i++) {
+            String city = sortCityList.get(i).getName();
             String pinYinFirstLetter = PinYinUtils.getPinYinFirstLetter(city);
             s = s + pinYinFirstLetter;
         }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bk.yd.fast_ui.R;
+import com.fast.ui.fast_ui.indexview.utils.City;
 import com.fast.ui.fast_ui.indexview.utils.PinYinUtils;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_RE_MEN = 1;
     private static final int TYPE_CITY_LIST = 2;
     Context context;
-    List<String> mSortCityList;
+    List<City> mSortCityList;
     int positionA;
 
     /**
@@ -29,7 +30,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param context
      * @param mSortCityList 排序后的城市列表
      */
-    public MyAdapter(Context context, List<String> mSortCityList, int positionA) {
+    public MyAdapter(Context context, List<City> mSortCityList, int positionA) {
         this.context = context;
         this.mSortCityList = mSortCityList;
         this.positionA=positionA;
@@ -67,21 +68,22 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-
-        int dataPosition = position - positionA;//2是因为多了额外的2个定位、热门
+        //排序后的城市列表开始的索引位置
+        int dataStartPosition = position - positionA;//2是因为多了额外的2个定位、热门
         if (holder instanceof CityListViewHolder) {
 
             CityListViewHolder cityListViewHolder = (CityListViewHolder) holder;
-            String data = mSortCityList.get(dataPosition);
-            String firstLetter = PinYinUtils.getPinYinFirstLetter(data);
+            String cityName = mSortCityList.get(dataStartPosition).getName();
+            String cityId = mSortCityList.get(dataStartPosition).getId();
+            String firstLetter = PinYinUtils.getPinYinFirstLetter(cityName);
             cityListViewHolder.title.setText(firstLetter);
-            cityListViewHolder.tv.setText(data);
+            cityListViewHolder.tv.setText(cityName+cityId+"/");
 
 
-            if (dataPosition> 0) {
-                String preData = mSortCityList.get(dataPosition - 1);
+            if (dataStartPosition> 0) {
+                String preName = mSortCityList.get(dataStartPosition - 1).getName();
 
-                String preFirstLetter = PinYinUtils.getPinYinFirstLetter(preData);
+                String preFirstLetter = PinYinUtils.getPinYinFirstLetter(preName);
 
 
                 if (firstLetter.equals(preFirstLetter)) {

@@ -16,8 +16,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.bk.yd.fast_ui.R;
+import com.fast.ui.fast_ui.indexview.utils.City;
 import com.fast.ui.fast_ui.indexview.utils.ComparatorUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -43,8 +45,10 @@ public class IndexView extends FrameLayout {
     private IndexBar mIndexBar;
 
 
-    public void setOriginalCityStrings(List<String> originalCityStrings) {
-        mOriginalCityStrings = originalCityStrings;
+    private List<City> mOriginalCityList = new ArrayList<>();
+
+    public void setOriginalCityList(List<City> originalCityList) {
+        mOriginalCityList = originalCityList;
         initDataList();
 
     }
@@ -58,9 +62,9 @@ public class IndexView extends FrameLayout {
     /**
      * 按照首字母排序后的城市列表
      */
-    private List<String> mSortCityList;
+    private List<City> mSortCityList;
 
-    public List<String> getSortCityList() {
+    public List<City> getSortCityList() {
         return mSortCityList;
     }
 
@@ -140,7 +144,7 @@ public class IndexView extends FrameLayout {
 
     private void initDataList() {
 
-        mSortCityList = ComparatorUtils.sortCityList(mOriginalCityStrings);
+        mSortCityList = ComparatorUtils.sortCityList(mOriginalCityList);
         mSortCityListFirstLetterToString = ComparatorUtils.getSortCityListFirstLetterToString(mSortCityList);
     }
 
@@ -361,18 +365,27 @@ public class IndexView extends FrameLayout {
                     "V", "W", "X", "Y", "Z",
             "#"};
 
-IndexView indexView = (IndexView) findViewById(R.id.indexView);
+    IndexView indexView = (IndexView) findViewById(R.id.indexView);
 
-
-//      1. set初始化城市集合（一个list<string>,可以来自资源文件，也可以直接是个list）
-        indexView.setOriginalCityStrings(Arrays.asList(getResources().getStringArray(R.array.city_array)));
+                List<City> mCitys = new ArrayList<>();
+        //从网络获取城市数据，然后设置到 List<City> mCitys里面，因为后面设置数据需要 List<City> mCitys
+                List<CityBean.ListBean> list = cityBean.getList();
+                for (int i = 0; i < list.size(); i++) {
+                    String name = list.get(i).getNAME();
+                    String id = list.get(i).getId() + "";
+                    String longitude = list.get(i).getLongitude() + "";
+                    String latitude = list.get(i).getLatitude() + "";
+                    mCitys.add(new City(name, id, longitude, latitude));//拼音会根据城市name内部自动生成
+                        //这个City类，只有name是必须的，其他的根据情况定，这样做是为了解决城市有id等其他字段的情况
+                }
+//      1. set初始化城市集合
+                mIndexView.setOriginalCityList(mCitys);
 //      2.set右侧indexBar显示的内容
-        indexView.setIndexBarData(firstLetterArrays,50);
-//        设置右侧indexbar的尺寸和位置
-        indexView.setIndexBarSizeAndGravityAndMargin(100, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER|Gravity.RIGHT,0,0,0,0);
+                mIndexView.setIndexBarData(firstLetterArrays, 50);
+                mIndexView.setIndexBarSizeAndGravityAndMargin(100, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER | Gravity.RIGHT, 0, 0, 0, 0);
 
 //      3.设置A字符在firstLetterArrays中的索引
-        indexView.setPositionA(2);
-//      4.setAdapter,注意一定要传入排序后的城市列表（具体的RecyclerView如何显示，在MyAdapter里去配置）
-        indexView.setAdapter(new MyAdapter(this,indexView.getSortCityList(),2));
+                mIndexView.setPositionA(2);
+//      4.setAdapter,注意一定要传入排序后的城市列表
+                mIndexView.setAdapter(new MyAdapter(getContext(), mIndexView.getSortCityList(), 2));
 * */
