@@ -43,7 +43,7 @@ public class PicturePickerAdapter extends RecyclerView.Adapter<PicturePickerAdap
 //        ImageUtils.loadImage(mContext, absolutePath + "/" + imgs.get(position), holder.picPickerImagerView);
         ImageUtils.loadImage(mContext, imgs.get(position), holder.picPickerImagerView);
 
-        if (PicturePickerActivity.mTempSelectPathList.contains(imgs.get(position))) {
+        if (((PicturePickerActivity) mContext).getTempSelectPathList().contains(imgs.get(position))) {
             holder.checkbox.setChecked(true);
         } else {
             holder.checkbox.setChecked(false);

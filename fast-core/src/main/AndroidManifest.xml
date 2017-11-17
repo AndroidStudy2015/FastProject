@@ -4,9 +4,11 @@
     >
 
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+
         android:supportsRtl="true"
         >
         <activity android:name="com.fast.core.fast_core.ui.scan.SimpleScannerBarActivity"/>
@@ -15,6 +17,7 @@
         <!--选择一个照片-->
         <activity
             android:name="com.fast.core.fast_core.ui.picture.one_picture_crop.entry.SinglePicturePickerActivity"
+            android:exported="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
 

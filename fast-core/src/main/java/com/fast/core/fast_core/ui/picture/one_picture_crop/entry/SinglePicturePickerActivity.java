@@ -443,7 +443,9 @@ public class SinglePicturePickerActivity extends AppCompatActivity implements Vi
         folderBean.setFolderFile(null);
         folderBean.setFolderName("所有照片");
         folderBean.setImagCount(allImgPathList.size());
-        folderBean.setFolderFirstPic(allImgPathList.get(0));
+        if (allImgPathList.size() != 0) {
+            folderBean.setFolderFirstPic(allImgPathList.get(0));
+        }
         folderBean.setFolderPath(null);
 
 //        把这个FolderBean放在了集合的第一个
@@ -494,6 +496,36 @@ public class SinglePicturePickerActivity extends AppCompatActivity implements Vi
 
         }
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+        if (mImgs != null) {
+            mImgs.clear();
+            mImgs = null;
+        }
+
+        if (mDirPaths != null) {
+            mDirPaths.clear();
+            mDirPaths = null;
+
+        }
+
+        if (mDirPathList != null) {
+            mDirPathList.clear();
+            mDirPathList = null;
+
+        }
+
+        if (allImgPathList != null) {
+            allImgPathList.clear();
+            allImgPathList = null;
+
+        }
+
+
+
+
+    }
 
 }

@@ -62,9 +62,6 @@ public class FirstActivity extends AppCompatActivity {
         });
 
 
-
-
-
         btOpenCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +77,7 @@ public class FirstActivity extends AppCompatActivity {
                     dir.mkdir();
                 }
 
-                mCameraTempImageFile = new File(saveDir, System.currentTimeMillis()+"temp_img.jpg");
+                mCameraTempImageFile = new File(saveDir, System.currentTimeMillis() + "temp_img.jpg");
 
                 Uri imageUri = Uri.fromFile(mCameraTempImageFile);
                 //指定照片保存路径（SD卡），temp_img.jpg为一个临时文件，每次拍照后这个图片都会被替换
@@ -118,6 +115,8 @@ public class FirstActivity extends AppCompatActivity {
         //        打开相机，相机拍照后
         if (resultCode == RESULT_OK && requestCode == PictureCrop.PIC_TAKE_PHOTO) {
             CunZhi.mSelectPathList.add(mCameraTempImageFile.getAbsolutePath());
+            mSelectImagPathList.clear();
+
             mSelectImagPathList.addAll(CunZhi.mSelectPathList);
 
             mFirstAdapter.notifyDataSetChanged();
@@ -130,9 +129,6 @@ public class FirstActivity extends AppCompatActivity {
             intentBc.setData(resultUri);
             this.sendBroadcast(intentBc);
         }
-
-
-
 
 
         if (resultCode == PicturePickerActivity.RESULT_CODE_SELECTED_PATH_LIST) {
@@ -162,7 +158,6 @@ public class FirstActivity extends AppCompatActivity {
         super.onDestroy();
         CunZhi.mSelectPathList.clear();
     }
-
 
 
 }

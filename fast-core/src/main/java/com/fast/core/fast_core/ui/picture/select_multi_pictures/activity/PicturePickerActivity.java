@@ -86,10 +86,15 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
      * 存放所有图片path的集合
      */
     List<String> allImgPathList = new ArrayList<>();
+
+    public List<String> getTempSelectPathList() {
+        return mTempSelectPathList;
+    }
+
     /**
      * 存放所有临时选中的图片的集合
      */
-    public static List<String> mTempSelectPathList = new ArrayList<>();
+    public  List<String> mTempSelectPathList = new ArrayList<>();
 
     private TextView mTvSelectDir;
     private ImageView mSjxIcon;
@@ -436,8 +441,9 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         folderBean.setFolderFile(null);
         folderBean.setFolderName("所有照片");
         folderBean.setImagCount(allImgPathList.size());
-        if (allImgPathList.size()!=0){
-        folderBean.setFolderFirstPic(allImgPathList.get(0));}
+        if (allImgPathList.size() != 0) {
+            folderBean.setFolderFirstPic(allImgPathList.get(0));
+        }
         folderBean.setFolderPath(null);
 
 //        把这个FolderBean放在了集合的第一个
@@ -531,5 +537,38 @@ public class PicturePickerActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+        if (mImgs != null) {
+            mImgs.clear();
+            mImgs = null;
+        }
+
+        if (mDirPaths != null) {
+            mDirPaths.clear();
+            mDirPaths = null;
+
+        }
+
+        if (mDirPathList != null) {
+            mDirPathList.clear();
+            mDirPathList = null;
+
+        }
+
+        if (allImgPathList != null) {
+            allImgPathList.clear();
+            allImgPathList = null;
+
+        }
+
+
+        if (mTempSelectPathList != null) {
+            mTempSelectPathList.clear();
+            mTempSelectPathList = null;
+        }
+
+    }
 }
